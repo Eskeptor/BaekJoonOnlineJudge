@@ -1,5 +1,8 @@
 // 틀린 문제
 // 왜 틀린지 모르겠음
+/*
+https://www.acmicpc.net/problem/1002
+*/
 
 #include <iostream>
 #include <cmath>

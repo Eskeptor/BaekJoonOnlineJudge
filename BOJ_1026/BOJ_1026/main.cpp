@@ -1,3 +1,7 @@
+/*
+https://www.acmicpc.net/problem/1026
+*/
+
 #include <iostream>
 #include <algorithm>
 #define MAX_ARR 2

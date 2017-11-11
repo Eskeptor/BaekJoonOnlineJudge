@@ -1,3 +1,7 @@
+/*
+https://www.acmicpc.net/problem/1001
+*/
+
 #include <iostream>
 using namespace std;
 

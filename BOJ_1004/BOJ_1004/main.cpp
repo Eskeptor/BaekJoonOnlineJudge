@@ -1,5 +1,7 @@
 // 틀린문제
-
+/*
+https://www.acmicpc.net/problem/1004
+*/
 
 #include <iostream>
 using namespace std;
