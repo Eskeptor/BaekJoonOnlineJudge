@@ -8,23 +8,13 @@ using namespace std;
 
 int main(void)
 {
-	/*string str;
+	string str;
 
 	for (int i = 0; i < 100 && !cin.eof(); i++)
 	{
 		getline(cin, str);
-		str.append("\0");
-		if (str.empty())
-			break;
 		cout << str << endl;
 	}
-*/
-	char ch;
-	for (int i = 0; i < 100; i++)
-	{
-		while ((ch = getchar()) && ch != -1) {
-			printf("%c", ch);
-		}
-	}
+
 	return 0;
 }
