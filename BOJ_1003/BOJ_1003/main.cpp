@@ -3,70 +3,37 @@ https://www.acmicpc.net/problem/1003
 */
 
 #include <iostream>
-using namespace std;
+#define MAX 41
 
-int zeroCnt = 0;
-int oneCnt = 0;
+int arr[MAX] = { 1,1 };
 
 int fibo(int _num)
 {
-	if (_num == 0) 
-	{
-		zeroCnt++;
-		return 0;
-	}
-	else if (_num == 1) 
-	{
-		oneCnt++;
-		return 1;
-	}
-	else 
-	{
-		return fibo(_num - 1) + fibo(_num - 2);
-	}
+	if (_num <= 1)
+		return arr[_num];
+	else if (arr[_num] > 0)
+		return arr[_num];
+	arr[_num] = fibo(_num - 1) + fibo(_num - 2);
+
+	return arr[_num];
 }
 
 
 int main(void) 
 {
-	int cnt = 0;
-	cin >> cnt;
-	int *arr_cnt = new int[cnt];
-	int **arr = new int*[cnt];
+	int lines, input;
+	scanf("%d", &lines);
 
-	for (int i = 0; i < cnt; i++) 
+	fibo(40);
+	for (int i = 0; i < lines; i++)
 	{
-		cin >> arr_cnt[i];
-		if (arr_cnt[i] > 40 || arr_cnt[i] < 0) 
-		{
-			cout << "잘못된 입력" << endl;
-			i--;
-		}
-		arr[i] = new int[2];
+		scanf("%d", &input);
+		if (input == 0)
+			printf("1 0\n");
+		else if (input == 1)
+			printf("0 1\n");
+		else
+			printf("%d %d\n", arr[input - 2], arr[input - 1]);
 	}
-	for (int i = 0; i < cnt; i++)
-	{
-		fibo(arr_cnt[i]);
-		arr[i][0] = zeroCnt;
-		arr[i][1] = oneCnt;
-		zeroCnt = 0;
-		oneCnt = 0;
-	}
-	for (int i = 0; i < cnt; i++) 
-	{
-		for (int j = 0; j < 2; j++) 
-		{
-			cout << arr[i][j];
-			cout << " ";
-		}
-		cout << endl;
-	}
-
-	for (int i = 0; i < cnt; i++) 
-	{
-		delete[] arr[i];
-	}
-	delete[] arr;
-	delete[] arr_cnt;
 	return 0;
 }
