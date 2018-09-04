@@ -19,7 +19,7 @@ int fibo(int _num)
 }
 
 
-int main(void) 
+int main(void)
 {
 	int lines, input;
 	scanf("%d", &lines);
