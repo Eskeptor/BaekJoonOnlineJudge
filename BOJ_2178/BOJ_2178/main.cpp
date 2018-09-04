@@ -63,7 +63,7 @@ int main(void)
 	
 	solution(n, m);
 
-	for (int i = 0; i < m; i++)
+	for (int i = 0; i < n; i++)
 		delete[] arr[i];
 	delete[] arr;
 	delete[] tmp;
