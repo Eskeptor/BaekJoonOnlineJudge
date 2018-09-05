@@ -17,17 +17,17 @@ void solution(int lines)
 		{
 			if (j == 0)
 			{
-				arr[i][j] = arr[i][j] + arr[i - 1][j];
+				arr[i][j] += arr[i - 1][j];
 				max = arr[i][j];
 			}
 			else if (j == i)
 			{
-				arr[i][j] = arr[i][j] + arr[i - 1][j - 1];
+				arr[i][j] += arr[i - 1][j - 1];
 				max = std::max(max, arr[i][j]);
 			}
 			else
 			{
-				arr[i][j] = arr[i][j] + std::max(arr[i - 1][j - 1], arr[i - 1][j]);
+				arr[i][j] += std::max(arr[i - 1][j - 1], arr[i - 1][j]);
 				max = std::max(max, arr[i][j]);
 			}
 		}
