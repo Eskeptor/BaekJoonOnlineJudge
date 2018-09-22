@@ -3,20 +3,7 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
-#include <ctime>
-#include <cstdlib>
 using namespace std;
-
-template <typename T>
-constexpr void SafeDeleteArray(T* arr) noexcept
-{
-	if (arr)
-	{
-		delete[] arr;
-		arr = nullptr;
-	}
-}
-
 
 void solution(int* arr, int n)
 {
@@ -26,27 +13,60 @@ void solution(int* arr, int n)
 		return;
 	}
 
-	int lineAdder = arr[0];
-	int max = arr[0];
-	bool isContinue = true;
+	int minusCounter = 0;
+	for (int i = 0; i < n; i++)
+		if (arr[i] < 0)
+			minusCounter++;
 
-
-	for (int i = 1; i < n; i++)
+	if (minusCounter == n)
 	{
-		
+		sort(arr, arr + n);
+		printf("%d", arr[n - 1]);
+		return;
 	}
-}
 
-void autoRandom(int* arr, int length)
-{
-	int flag;
-	srand((unsigned int)time(NULL));
-	for (int i = 0; i < length; i++)
+	vector<int> v;
+	int total = 0, tmp;
+	bool resetFlag = false;
+	int next;
+	for (int i = 0; i < n; i++)
 	{
-		flag = rand() % 2 == 0 ? -1 : 1;
-		arr[i] = rand() % 1000 * flag;
-		_sleep(1);
+		if (arr[i] >= 0)
+		{
+			total += arr[i];
+			resetFlag = false;
+		}
+		else
+		{
+			next = i + 1;
+			tmp = total + arr[i];
+			if (next < n && arr[next] + tmp > 0)
+			{
+				if (arr[next] + tmp >= arr[next])
+				{
+					total += arr[i];
+					resetFlag = false;
+				}
+				else 
+				{
+					total = 0;
+				}
+			}
+			else 
+			{
+				if (!resetFlag)
+				{
+					v.push_back(total);
+					total = 0;
+					resetFlag = true;
+				}
+			}
+		}
 	}
+	v.push_back(total);
+
+	sort(v.begin(), v.end());
+	printf("%d", v.back());
 }
 
 int main(void)
@@ -57,10 +77,10 @@ int main(void)
 	int* arr = new int[n];
 	for (int i = 0; i < n; i++)
 		scanf("%d", &arr[i]);
-	//autoRandom(arr, n);
 
 	solution(arr, n);
 
-	SafeDeleteArray(arr);
+	delete[] arr;
+	arr = nullptr;
 	return 0;
 }
