@@ -1,5 +1,8 @@
 #include <iostream>
 #include <memory.h>
+#include <queue>
+
+using namespace std;
 
 template <typename T>
 constexpr void SafeDeleteArray(T** arr, int length) noexcept
@@ -13,41 +16,46 @@ constexpr void SafeDeleteArray(T** arr, int length) noexcept
 	}
 }
 
-int directX[] = { 0, 1, 0, -1 };
-int directY[] = { -1, 0, 1, 0 };
-bool isComplete = true;
-
-int spread(int** arr, int** copy, int x, int y)
+struct Point
 {
-	for (int i = 0; i < y; i++)
-		for (int j = 0; j < x; j++)
-			copy[i][j] = arr[i][j];
-	
+	int x;
+	int y;
+};
+
+int directX[] = { 0, 1, 0, -1 };	// x축으로 시계방향으로
+int directY[] = { -1, 0, 1, 0 };	// y축으로 시계방향으로
+int zeroCounter = 0;				// 0의 개수만큼 1이 채워졌는가 유무 판단
+
+int spread(int** arr, int x, int y, queue<Point>* point)
+{
 	int result = 0;
 	int sideX, sideY;
-	for (int i = 0; i < y; i++)
-	{
-		for (int j = 0; j < x; j++)
-		{
-			if (arr[i][j] == 1 && arr[i][j] == copy[i][j])
-			{
-				for (int k = 0; k < 4; k++)
-				{
-					sideX = j + directX[k];
-					sideY = i + directY[k];
+	int length = point->size();
+	struct Point p;
 
-					if (sideX >= 0 && sideX < x && sideY >= 0 && sideY < y
-						&& arr[sideY][sideX] == 0)
-					{
-						arr[sideY][sideX] = 1;
-						result = 1;
-						isComplete = true;
-					}
+	for (int i = 0; i < length; i++)
+	{
+		p = point->front();
+		point->pop();
+
+		if (arr[p.y][p.x] == 1)
+		{
+			for (int k = 0; k < 4; k++)
+			{
+				sideX = p.x + directX[k];
+				sideY = p.y + directY[k];
+
+				if (sideX >= 0 && sideX < x && sideY >= 0 && sideY < y
+					&& arr[sideY][sideX] == 0)
+				{
+					point->push(Point());
+					point->back().x = sideX;
+					point->back().y = sideY;
+					arr[sideY][sideX] = 1;
+					result = 1;
+					zeroCounter--;
 				}
 			}
-
-			if (arr[i][j] == 0)
-				isComplete = false;
 		}
 	}
 	return result;
@@ -56,35 +64,53 @@ int spread(int** arr, int** copy, int x, int y)
 void solution(int x, int y)
 {
 	int** arr = new int*[y];
-	int** copy = new int*[y];
+	// 1이 있는 위치를 나타내어 줄 큐
+	queue<Point> point;
 	for (int i = 0; i < y; i++)
 	{
 		arr[i] = new int[x];
-		copy[i] = new int[x];
 		memset(arr[i], 0, sizeof(int) * x);
-		memset(copy[i], 0, sizeof(int) * x);
 	}
 
 	for (int i = 0; i < y; i++)
 		for (int j = 0; j < x; j++)
+		{
 			scanf("%d", &arr[i][j]);
+
+			// 1이 입력되었다면
+			// 큐에 1이 입력된 지점을 넣는다.
+			if (arr[i][j] == 1)
+			{
+				point.push(Point());
+				point.back().x = j;
+				point.back().y = i;
+			}
+			// 0이 입력되었다면
+			// 제로카운터를 증가시킨다.
+			else if (arr[i][j] == 0)
+				zeroCounter++;
+		}
+			
 
 	int result;
 	int days = 0;
+
 	while (true)
 	{
-		result = spread(arr, copy, x, y);
+		result = spread(arr, x, y, &point);
+		//결과가 0이면 1로 채우지 않았다는 것이므로 while문 종료
 		if (result == 0)
 			break;
 		days += result;
 	}
 
-	if (!isComplete)
+	// 만약 제로카운터가 0이 되지 않았다는 것은 모든 0을 1로 바꾸지 않았다는 것이므로
+	// -1로 days를 바꾼다.
+	if (zeroCounter != 0)
 		days = -1;
 	printf("%d", days);
 
 	SafeDeleteArray(arr, y);
-	SafeDeleteArray(copy, y);
 }
 
 int main(void)
